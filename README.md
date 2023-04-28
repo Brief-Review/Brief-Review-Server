@@ -1,4 +1,7 @@
-# <span style="color:orange">CodeCheck</span>
+#
+<span style="color:orange">
+ CodeCheck
+</span>
 
 CodeCheck is a Laravel-based project that provides tools and resources for new developers to facilitate their learning of programming languages. It offers briefs to practice and feedback to improve their coding skills.
 
