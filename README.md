@@ -1,4 +1,4 @@
-# CodeCheck
+# <span style="color:orange">CodeCheck</span>
 
 CodeCheck is a Laravel-based project that provides tools and resources for new developers to facilitate their learning of programming languages. It offers briefs to practice and feedback to improve their coding skills.
 
@@ -65,4 +65,4 @@ Contributions are welcome! To contribute, please follow these steps:
 
 ## License
 
-This project is licensed under the CodeCheck-License
+This project is licensed under the Genious-Developers 
