@@ -7,43 +7,78 @@ use Illuminate\Http\Request;
 
 class GraduatingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
+        $graduatings = Graduating::all();
+        return response()->json($graduatings);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'required',
+            'category' => 'required',
+            'duration' => 'required',
+            'location' => 'required',
+            'partners' => 'required',
+            'manager' => 'required',
+        ];
+        $validator = \Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        $graduating = new Graduating($request->input());
+        $graduating->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'New Graduating Group created Successfully'
+        ], 200);
+
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Graduating $graduating)
     {
-        //
+        return response()->json(['status' => true, 'data' => $graduating]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, Graduating $graduating)
     {
-        //
+        $rules = [
+            'name' => 'required',
+            'category' => 'required',
+            'duration' => 'required',
+            'location' => 'required',
+            'partners' => 'required',
+            'manager' => 'required',
+        ];
+        $validator = \Validator::make($request->input(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+        $graduating->update($request->input());
+        return response()->json([
+            'status' => true,
+            'message' => 'Graduating Group Updated successfully'
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Graduating $graduating)
     {
-        //
+        $graduating->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Graduating Group Deleted successfully'
+        ], 200);
     }
 }

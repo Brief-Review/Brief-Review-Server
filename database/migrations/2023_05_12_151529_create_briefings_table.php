@@ -12,7 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('briefings', function (Blueprint $table) {
-            $table->id();
+            $table->id();            
+            $table->foreignId('graduating_id')->constrained('graduatings')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict')->nullable();            
+            $table->string('title');
+            $table->string('description');
+            $table->string('repoGithub');
+            $table->string('feedback');
             $table->timestamps();
         });
     }
