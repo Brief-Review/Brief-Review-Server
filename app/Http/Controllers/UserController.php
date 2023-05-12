@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Briefing;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class BriefingController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class BriefingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Briefing $briefing)
+    public function show(User $user)
     {
         //
     }
@@ -34,7 +34,7 @@ class BriefingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Briefing $briefing)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -42,7 +42,7 @@ class BriefingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Briefing $briefing)
+    public function destroy(User $user)
     {
         //
     }
