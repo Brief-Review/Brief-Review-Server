@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('assets', function (Blueprint $table) {
             $table->id();            
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict'); 
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade'); 
             $table->string('title');
             $table->string('link');
             $table->string('image');

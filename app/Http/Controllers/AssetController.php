@@ -22,10 +22,9 @@ class AssetController extends Controller
             'link' => 'required',
             'image' => 'required',
             'tags' => 'required',
-            'user_id' => 'required',
-            
+
         ];
-        
+
         $validator = \Validator::make($request->input(), $rules);
         if ($validator->fails()) {
             return response()->json([
@@ -34,30 +33,29 @@ class AssetController extends Controller
             ], 400);
         }
         $asset = new asset($request->input());
+        $asset->user_id = $request->user()->id;
         $asset->save();
         return response()->json([
             'status' => true,
             'message' => 'New asset created Successfully'
         ], 200);
-
-
     }
 
 
-    public function show(asset $asset)
+    public function show(Asset $asset)
     {
         return response()->json(['status' => true, 'data' => $asset]);
     }
 
 
-    public function update(Request $request, asset $asset)
+    public function update(Request $request, Asset $asset)
     {
         $rules = [
             'title' => 'required',
             'link' => 'required',
             'image' => 'required',
             'tags' => 'required',
-            'user_id' => 'required',
+            
         ];
         $validator = \Validator::make($request->input(), $rules);
         if ($validator->fails()) {
@@ -66,7 +64,10 @@ class AssetController extends Controller
                 'errors' => $validator->errors()->all()
             ], 400);
         }
+
+        $asset->user_id = auth()->id();
         $asset->update($request->input());
+
         return response()->json([
             'status' => true,
             'message' => 'asset Updated successfully'
@@ -74,7 +75,7 @@ class AssetController extends Controller
     }
 
 
-    public function destroy(asset $asset)
+    public function destroy(Asset $asset)
     {
         $asset->delete();
         return response()->json([
@@ -83,13 +84,15 @@ class AssetController extends Controller
         ], 200);
     }
 
-    public function assetByuser(){
-        $assets = asset::select(DB::raw('count(assets.id) as count', 'users.name'))->join('users','users.id','=','assets.user_id')->groupBy('users.name')->get();
+    public function AssetsByuser()
+    {
+        $assets = Asset::select(DB::raw('count(assets.id) as count', 'users.name'))->join('users', 'users.id', '=', 'assets.user_id')->groupBy('users.name')->get();
         return response()->json($assets);
     }
 
-    public function all(){
-        $assets = asset::select('assets.*','users.name as user')->join('users','users.id','=','assets.user_id')->get();
+    public function all()
+    {
+        $assets = Asset::select('assets.*', 'users.name as user')->join('users', 'users.id', '=', 'assets.user_id')->get();
         return response()->json($assets);
     }
 }

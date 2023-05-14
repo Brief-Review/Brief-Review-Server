@@ -13,6 +13,7 @@ class Asset extends Model
         'title',
         'link',
         'image',
-        'tags',        
+        'tags', 
+        'user_id',       
     ];
 }
