@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('graduating_group', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('category');
-            $table->string('duration');
-            $table->string('location');
-            $table->string('partners');
-            $table->string('manager');
+        Schema::create('assets', function (Blueprint $table) {
+            $table->id();            
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade'); 
+            $table->string('title');
+            $table->string('link');
+            $table->string('image');
+            $table->string('tags');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('graduating_group');
+        Schema::dropIfExists('assets');
     }
 };

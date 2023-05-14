@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('briefing', function (Blueprint $table) {
-            $table->id();
+        Schema::create('briefings', function (Blueprint $table) {
+            $table->id();            
+            $table->foreignId('graduating_id')->constrained('graduatings')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');            
             $table->string('title');
             $table->string('description');
             $table->string('repoGithub');
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('briefing');
+        Schema::dropIfExists('briefings');
     }
 };

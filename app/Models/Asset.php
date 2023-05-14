@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Graduating extends Model
+class Asset extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'category',
-        'duration',
-        'location',
-        'partners',
-        'manager',
-        
+        'title',
+        'link',
+        'image',
+        'tags', 
+        'user_id',       
     ];
 }
