@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AssetController extends Controller
 {
@@ -20,19 +21,27 @@ class AssetController extends Controller
         $rules = [
             'title' => 'required',
             'link' => 'required',
-            'image' => 'required',
+            'image' => 'required|image|mimes:png,jpg,jpeg',
             'tags' => 'required',
 
         ];
 
-        $validator = \Validator::make($request->input(), $rules);
+        $validator = \Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
             ], 400);
         }
-        $asset = new asset($request->input());
+
+        $asset = new asset($request->all());
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $asset->image = $imagePath;
+        }
+
+
         $asset->user_id = $request->user()->id;
         $asset->save();
         return response()->json([
@@ -53,11 +62,11 @@ class AssetController extends Controller
         $rules = [
             'title' => 'required',
             'link' => 'required',
-            'image' => 'required',
+            'image' => 'nullable|image',
             'tags' => 'required',
-            
+
         ];
-        $validator = \Validator::make($request->input(), $rules);
+        $validator = \Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -66,7 +75,16 @@ class AssetController extends Controller
         }
 
         $asset->user_id = auth()->id();
-        $asset->update($request->input());
+
+        $asset->fill($request->except('image'));
+        
+        if ($request->hasFile('image')) {            
+            Storage::disk('public')->delete($asset->image);            
+            $imagePath = $request->file('image')->store('images', 'public');
+            $asset->image = $imagePath;
+        }
+
+        $asset->save();       
 
         return response()->json([
             'status' => true,
