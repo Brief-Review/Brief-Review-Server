@@ -17,4 +17,13 @@ class Briefing extends Model
         'graduating_id',
         'user_id',
     ];
+
+    //Relationship to Graduating
+    public function graduatings() {
+        return $this->belongsTo(Graduating::class);
+    }
+    //Relationship to User
+    public function users() {
+        return $this->belongsTo(User::class);
+    }
 }

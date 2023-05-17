@@ -18,4 +18,14 @@ class Graduating extends Model
         'manager',
         
     ];
+
+    //Relationship to User
+    public function users (){
+        return $this->hasMany(User::class);
+    }
+    //Relationship to Briefing
+    public function briefings (){
+        return $this->hasMany(Briefing::class);
+    }
+    
 }

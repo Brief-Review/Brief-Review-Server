@@ -28,4 +28,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //Relationship to Graduating
+    public function graduatings() {
+        return $this->belongsTo(Graduating::class);
+    }
+    //Relationship to Briefing
+    public function briefings() {
+        return $this->hasMany(Briefing::class);
+    }
+    //Relationships to Resource
+    public function resources() {
+        return $this->hasMany(Asset::class);
+    }
 }

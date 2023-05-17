@@ -29,7 +29,7 @@ Route::post('/auth/login', [UserController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/auth/logout', [UserController::class, 'logout']);
-    Route::put('/user/{user}', [UserController::class, 'update']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
 
     Route::middleware(['superadmin'])->group(function () {
         Route::get('/graduatings', [GraduatingController::class, 'index']);
@@ -38,9 +38,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/graduatings/{graduating}', [GraduatingController::class, 'update']);
         Route::delete('/graduatings/{graduating}', [GraduatingController::class, 'destroy']);
 
-        Route::get('/user', [UserController::class, 'index']);
-        Route::get('/user/{user}', [UserController::class, 'show']);
-        Route::delete('/user/{user}', [UserController::class, 'destroy']);
+        Route::get('/users', [UserController::class, 'index']);
+        Route::get('/users/{user}', [UserController::class, 'show']);
+        Route::delete('/users/{user}', [UserController::class, 'destroy']);
     });
 
     Route::middleware('admin')->group(function () {
@@ -50,8 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/assets/{asset}', [AssetController::class, 'show']);
         Route::put('/assets/{asset}', [AssetController::class, 'update']);
         Route::delete('/assets/{asset}', [AssetController::class, 'destroy']);
-        Route::get('/assetsall', [AssetController::class, 'all']);
-        Route::get('/assetsbyuser', [AssetController::class, 'AssetsByUser']);
+        Route::get('/assets/all', [AssetController::class, 'all']);
+        Route::get('/assets/byuser', [AssetController::class, 'AssetsByUser']);
     });
 
     Route::middleware('mentor')->group(function () {
@@ -63,7 +63,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/briefings/{briefing}', [BriefingController::class, 'show']);
         Route::put('/briefings/{briefing}', [BriefingController::class, 'update']);
         Route::delete('/briefings/{briefing}', [BriefingController::class, 'destroy']);
-        Route::get('/briefingsall', [BriefingController::class, 'all']);
-        Route::get('briefingsbygraduating', [BriefingController::class, 'BriefingsByGraduating']);
+        Route::get('/briefings/all', [BriefingController::class, 'all']);
+        Route::get('briefings/bygraduating', [BriefingController::class, 'BriefingsByGraduating']);
     });
 });
