@@ -50,8 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/assets/{asset}', [AssetController::class, 'show']);
         Route::put('/assets/{asset}', [AssetController::class, 'update']);
         Route::delete('/assets/{asset}', [AssetController::class, 'destroy']);
-        Route::get('/assets/all', [AssetController::class, 'all']);
-        Route::get('/assets/byuser', [AssetController::class, 'AssetsByUser']);
+        Route::get('/assets-all', [AssetController::class, 'all']);
+        Route::get('/assets-by-user', [AssetController::class, 'AssetsByUser']);
     });
 
     Route::middleware('mentor')->group(function () {
@@ -63,7 +63,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/briefings/{briefing}', [BriefingController::class, 'show']);
         Route::put('/briefings/{briefing}', [BriefingController::class, 'update']);
         Route::delete('/briefings/{briefing}', [BriefingController::class, 'destroy']);
-        Route::get('/briefings/all', [BriefingController::class, 'all']);
-        Route::get('briefings/bygraduating', [BriefingController::class, 'BriefingsByGraduating']);
+        Route::get('/briefings-all', [BriefingController::class, 'all']);
+        Route::get('briefings-by-graduating', [BriefingController::class, 'BriefingsByGraduating']);
     });
 });
