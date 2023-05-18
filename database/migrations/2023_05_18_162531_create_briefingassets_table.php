@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('briefings', function (Blueprint $table) {
+        Schema::create('briefingassets', function (Blueprint $table) {
             $table->id();            
-            $table->foreignId('graduating_id')->constrained('graduatings')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');            
+            $table->foreignId('briefing_id')->constrained('briefings')->onUpdate('cascade')->onDelete('cascade'); 
             $table->string('title');
-            $table->string('description');
-            $table->string('repoGithub');
-            $table->string('feedback');
+            $table->string('link');
+            $table->string('image');            
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('briefings');
+        Schema::dropIfExists('briefingassets');
     }
 };

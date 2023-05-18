@@ -26,4 +26,7 @@ class Briefing extends Model
     public function users() {
         return $this->belongsTo(User::class);
     }
+    public function briefingassets (){
+        return $this->hasMany(Briefingasset::class);
+    }
 }

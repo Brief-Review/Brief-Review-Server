@@ -4,8 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\BriefingassetController;
 use App\Http\Controllers\BriefingController;
 use App\Http\Controllers\GraduatingController;
+use App\Models\Briefingasset;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +53,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/assets/{asset}', [AssetController::class, 'update']);
         Route::delete('/assets/{asset}', [AssetController::class, 'destroy']);
         Route::get('/assets-all', [AssetController::class, 'all']);
-        Route::get('/assets-by-user', [AssetController::class, 'AssetsByUser']);
+        Route::get('/assets-by-user', [AssetController::class, 'assetsByUser']);
     });
 
     Route::middleware('mentor')->group(function () {
@@ -64,6 +66,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/briefings/{briefing}', [BriefingController::class, 'update']);
         Route::delete('/briefings/{briefing}', [BriefingController::class, 'destroy']);
         Route::get('/briefings-all', [BriefingController::class, 'all']);
-        Route::get('briefings-by-graduating', [BriefingController::class, 'BriefingsByGraduating']);
+        Route::get('briefings-by-graduating', [BriefingController::class, 'briefingsByGraduating']);
+
+        Route::get('/briefassets', [BriefingassetController::class, 'index']);
+        Route::post('/briefassets', [BriefingassetController::class, 'store']);
+        Route::get('/briefassets/{briefasset}', [BriefingassetController::class, 'show']);
+        Route::put('/briefassets/{briefasset}', [BriefingassetController::class, 'update']);
+        Route::delete('/briefassets/{briefasset}', [BriefingassetController::class, 'destroy']);
+        Route::get('/briefassets-all', [BriefingassetController::class, 'all']);
+        Route::get('/briefassets-by-brief', [BriefingassetController::class, 'assetsByBriefing']);
     });
 });

@@ -15,9 +15,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
-        'graduating_id',
-        
+        'password',       
     ];
 
     protected $hidden = [
@@ -29,16 +27,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    //Relationship to Graduating
-    public function graduatings() {
-        return $this->belongsTo(Graduating::class);
-    }
     //Relationship to Briefing
     public function briefings() {
         return $this->hasMany(Briefing::class);
     }
-    //Relationships to Resource
-    public function resources() {
+    //Relationships to Asset
+    public function assets() {
         return $this->hasMany(Asset::class);
     }
 }
