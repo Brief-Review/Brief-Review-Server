@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Briefing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class BriefingController extends Controller
 {
@@ -18,15 +19,15 @@ class BriefingController extends Controller
 
     public function store(Request $request)
     {
-        $rules = [
+        $validator = Validator::make($request->all(), [
             'title' => 'required',
             'description' => 'required',
             'repoGithub' => 'required',
             'feedback' => 'required',
-            'graduating_id' => 'required',            
-        ];
+            'graduating_id' => 'required',
+        ]);
 
-        $validator = \Validator::make($request->input(), $rules);
+        
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -53,15 +54,15 @@ class BriefingController extends Controller
 
     public function update(Request $request, Briefing $briefing)
     {
-        $rules = [
+        $validator = Validator::make($request->all(), [
             'title' => 'required',
             'description' => 'required',
             'repoGithub' => 'required',
             'feedback' => 'required',
             'graduating_id' => 'required',
+        ]);
 
-        ];
-        $validator = \Validator::make($request->input(), $rules);
+        
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,

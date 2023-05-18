@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Graduating;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class GraduatingController extends Controller
 {
@@ -17,22 +18,22 @@ class GraduatingController extends Controller
 
     public function store(Request $request)
     {
-        $rules = [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'category' => 'required',
             'duration' => 'required',
             'location' => 'required',
             'partners' => 'required',
             'manager' => 'required',
-        ];
-        $validator = \Validator::make($request->input(), $rules);
+        ]);
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
             ], 400);
         }
-        $graduating = new Graduating($request->input());
+        $graduating = new Graduating($request->all());
         $graduating->save();
         return response()->json([
             'status' => true,
@@ -50,22 +51,22 @@ class GraduatingController extends Controller
 
     public function update(Request $request, Graduating $graduating)
     {
-        $rules = [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'category' => 'required',
             'duration' => 'required',
             'location' => 'required',
             'partners' => 'required',
             'manager' => 'required',
-        ];
-        $validator = \Validator::make($request->input(), $rules);
+        ]);
+        
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()->all()
             ], 400);
         }
-        $graduating->update($request->input());
+        $graduating->update($request->all());
         return response()->json([
             'status' => true,
             'message' => 'Graduating Group Updated successfully'

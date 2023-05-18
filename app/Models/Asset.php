@@ -16,4 +16,10 @@ class Asset extends Model
         'tags', 
         'user_id',       
     ];
+
+    //Relationship to User
+    public function users (){
+        return $this->belongsTo(User::class);
+    }
+    
 }
