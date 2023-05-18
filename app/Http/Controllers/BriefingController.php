@@ -89,7 +89,7 @@ class BriefingController extends Controller
         ], 200);
     }
 
-    public function BriefingsByGraduating()
+    public function briefingsByGraduating()
     {
         $briefings = Briefing::select(DB::raw('count(briefings.id) as count', 'graduatings.name'))->join('graduatings', 'graduatings.id', '=', 'briefings.graduating_id')->groupBy('graduatings.name')->get();
         return response()->json($briefings);

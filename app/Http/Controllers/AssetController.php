@@ -144,8 +144,7 @@ class AssetController extends Controller
                 'image' => 'required|image|mimes:png,jpg,jpeg',
                 'tags' => 'required',
             ]);
-
-            // $validator = \Validator::make($request->all(), $rules);
+            
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,

@@ -10,23 +10,24 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index ()
+    public function index()
     {
         $users = User::all();
-        return  response($users,201);
-
+        return  response($users, 201);
     }
 
     public function register(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(),
-            [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:6',
-                'graduating_id'=>'nullable'
-            ]);
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users,email',
+                    'password' => 'required|min:6',
+
+                ]
+            );
 
             if ($validateUser->fails()) {
                 return response()->json([
@@ -41,7 +42,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'graduating_id'=>$request->graduating_id
+
             ]);
 
             return response()->json([
@@ -51,20 +52,22 @@ class UserController extends Controller
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=> false,
+                'status' => false,
                 'message' => $th->getMessage()
             ], 500);
-        }       
+        }
     }
 
     public function login(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(),
-            [
-                'email' => 'required|email',
-                'password' => 'required'
-            ]);
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'email' => 'required|email',
+                    'password' => 'required'
+                ]
+            );
 
             if ($validateUser->fails()) {
                 return response()->json([
@@ -88,14 +91,12 @@ class UserController extends Controller
                 'message' => 'User Logged In successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message' =>$th->getMessage()
+                'message' => $th->getMessage()
             ], 500);
         }
-
     }
 
     public function logout(Request $request)
@@ -103,49 +104,109 @@ class UserController extends Controller
         $request->user()->tokens()->delete();
 
         return response([
-            'message'=>'Logged out successfully'
+            'message' => 'Logged out successfully'
         ]);
     }
+
+
+
 
     public function update(Request $request, $id)
-    {
-        $Comment=User::findOrFail($id);
-        $Comment->update([
-            'name' => $request->name,
-            'password' => Hash::make($request->password),
-        ]);
+    {        
+        $user = Auth::user();
 
-        return response([
-            'message'=>'Your data has been updated successfully'
-        ],201);
+        try {
+            $userToUpdate = User::findOrFail($id);
+
+            
+            if ($user->role === "1") {
+                
+                $validator = Validator::make($request->all(), [
+                    'name' => 'nullable',  
+                    'password' => 'required',                  
+                    'address' => 'nullable',
+                    'graduating' => 'nullable',
+                    'email' => 'nullable|email',
+                    'role' => 'required'
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status' => false,
+                        'errors' => $validator->errors()->all()
+                    ], 400);
+                }
+
+                $userToUpdate->name = $request->input('name');                
+                $userToUpdate->password = Hash::make($request->input('password'));
+                $userToUpdate->address = $request->input('address');
+                $userToUpdate->graduating = $request->input('graduating');
+                $userToUpdate->email = $request->input('email');                
+                $userToUpdate->role = $request->input('role');
+            } else {
+                
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required',
+                    'password' => 'required',
+                    'address' => 'nullable',               
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status' => false,
+                        'errors' => $validator->errors()->all()
+                    ], 400);
+                }
+
+                $userToUpdate->name = $request->input('name');
+                $userToUpdate->password = Hash::make($request->input('password'));
+                $userToUpdate->address = $request->input('address');
+            }
+
+            $userToUpdate->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'User updated successfully',
+                'user' => $userToUpdate
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to update user.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
+
 
     public function show($id)
     {
-        $User=User::findOrFail($id);
-        return response($User,201);
+        $User = User::findOrFail($id);
+        return response($User, 201);
     }
 
     public function destroy(Request $request)
     {
         $request->validate([
-            
+
             'email' => 'required',
             'password' => 'required'
         ]);
 
         $user = User::where('email', $request->email)->first();
 
-        if(!$user|| !Hash::check($request->password,$user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
                 'message' => 'The provided credentials are incorrect.',
             ]);
-        } else{
+        } else {
 
             $request->user()->delete();
 
             return response([
-            'message'=>'User Deleted successfully'
+                'message' => 'User Deleted successfully'
             ]);
         }
     }
