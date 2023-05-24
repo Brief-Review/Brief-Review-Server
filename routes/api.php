@@ -17,7 +17,7 @@ Route::get('/google-auth/redirect', [GoogleAuthController::class, 'redirectToGoo
 Route::get('/google-auth/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
 
     Route::get('/auth/logout', [UserController::class, 'logout']);
     Route::put('/users/{user}', [UserController::class, 'update']);
