@@ -13,8 +13,11 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-        return response($users, 201);
+        $users = User::paginate(10); 
+        return response()->json([
+            'status' => true,
+            'data' => $users
+        ], 200);
     }
 
     public function register(Request $request)
@@ -137,4 +140,3 @@ class UserController extends Controller
         }
     }
 }
-

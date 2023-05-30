@@ -13,19 +13,11 @@ class AssetController extends Controller
 {
     public function index()
     {
-        try {
-            $assets = Asset::select('assets.*', 'users.name as user')
-                ->join('users', 'users.id', '=', 'assets.user_id')
-                ->get();
-
-            return response()->json($assets, 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to retrieve assets.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $assets = Asset::paginate(10); 
+        return response()->json([
+            'status' => true,
+            'data' => $assets
+        ], 200);
     }
 
     public function store(Request $request)

@@ -14,19 +14,11 @@ class BriefingassetController extends Controller
 
     public function index()
     {
-        try {
-            $briefingassets = Briefingasset::select('briefingassets.*', 'briefings.title as briefing')
-                ->join('briefings', 'briefings.id', '=', 'briefingassets.briefing_id')
-                ->get();
-
-            return response()->json($briefingassets, 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to retrieve assets.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $briefingassets = Briefingasset::paginate(10); 
+        return response()->json([
+            'status' => true,
+            'data' => $briefingassets
+        ], 200);
     }
 
     public function store(Request $request)
