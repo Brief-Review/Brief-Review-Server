@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class AssetController extends Controller
 {
@@ -36,7 +37,7 @@ class AssetController extends Controller
                 'image' => 'required|image|mimes:png,jpg,jpeg',
                 'tags' => 'required',
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -48,8 +49,8 @@ class AssetController extends Controller
             $asset->user_id = $request->user()->id;
 
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('images', 'public');
-                $asset->image = $imagePath;
+                $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+                $asset->image = $uploadedFileUrl;
             }
 
             $asset->save();
@@ -104,9 +105,10 @@ class AssetController extends Controller
             $asset->fill($request->except('image'));
 
             if ($request->hasFile('image')) {
-                Storage::disk('public')->delete($asset->image);
-                $imagePath = $request->file('image')->store('images', 'public');
-                $asset->image = $imagePath;
+                Cloudinary::destroy($asset->image);
+                $uploadedFile = $request->file('image');                
+                $uploadResult = Cloudinary::upload($uploadedFile->getRealPath());
+                $asset->image = $uploadResult->getSecurePath();
             }
 
             $asset->save();
@@ -127,7 +129,8 @@ class AssetController extends Controller
 
     public function destroy(Asset $asset)
     {
-        try {
+        try {            
+            Cloudinary::destroy($asset->image);            
             $asset->delete();
 
             return response()->json([
