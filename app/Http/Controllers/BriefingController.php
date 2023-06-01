@@ -12,8 +12,11 @@ class BriefingController extends Controller
 
     public function index()
     {
-        $briefings = Briefing::select('briefings.*', 'graduatings.name as graduating')->join('graduatings', 'graduatings.id', '=', 'briefings.graduating_id');
-        return response()->json($briefings);
+        $briefings = Briefing::paginate(10); 
+        return response()->json([
+            'status' => true,
+            'data' => $briefings
+        ], 200);
     }
 
 
