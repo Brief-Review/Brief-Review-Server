@@ -2,30 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Briefingasset;
 use Illuminate\Http\Request;
+use App\Models\Briefingasset;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class BriefingassetController extends Controller
 {
 
     public function index()
     {
-        try {
-            $briefingassets = Briefingasset::select('briefingassets.*', 'briefings.title as briefing')
-                ->join('briefings', 'briefings.id', '=', 'briefingassets.briefing_id')
-                ->get();
-
-            return response()->json($briefingassets, 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to retrieve assets.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $briefingassets = Briefingasset::paginate(10); 
+        return response()->json([
+            'status' => true,
+            'data' => $briefingassets
+        ], 200);
     }
 
     public function store(Request $request)
@@ -47,9 +40,9 @@ class BriefingassetController extends Controller
 
             $briefingasset = new Briefingasset($request->all());
 
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('images', 'public');
-                $briefingasset->image = $imagePath;
+            if ($request->hasFile('image')) {                
+                $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+                $briefingasset->image = $uploadedFileUrl;
             }
 
             $briefingasset->save();
@@ -103,9 +96,10 @@ class BriefingassetController extends Controller
             $briefingasset->fill($request->except('image'));
 
             if ($request->hasFile('image')) {
-                Storage::disk('public')->delete($briefingasset->image);
-                $imagePath = $request->file('image')->store('images', 'public');
-                $briefingasset->image = $imagePath;
+                Cloudinary::destroy($briefingasset->image);
+                $uploadedFile = $request->file('image');
+                $uploadResult = Cloudinary::upload($uploadedFile->getRealPath());
+                $briefingasset->image = $uploadResult->getSecurePath();                
             }
 
             $briefingasset->save();
@@ -126,7 +120,8 @@ class BriefingassetController extends Controller
 
     public function destroy(Briefingasset $briefingasset)
     {
-        try {
+        try {            
+            Cloudinary::destroy($briefingasset->image);            
             $briefingasset->delete();
 
             return response()->json([

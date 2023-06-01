@@ -7,24 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class AssetController extends Controller
 {
     public function index()
     {
-        try {
-            $assets = Asset::select('assets.*', 'users.name as user')
-                ->join('users', 'users.id', '=', 'assets.user_id')
-                ->get();
-
-            return response()->json($assets, 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to retrieve assets.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $assets = Asset::paginate(10); 
+        return response()->json([
+            'status' => true,
+            'data' => $assets
+        ], 200);
     }
 
     public function store(Request $request)
@@ -36,7 +29,7 @@ class AssetController extends Controller
                 'image' => 'required|image|mimes:png,jpg,jpeg',
                 'tags' => 'required',
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -48,8 +41,8 @@ class AssetController extends Controller
             $asset->user_id = $request->user()->id;
 
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('images', 'public');
-                $asset->image = $imagePath;
+                $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+                $asset->image = $uploadedFileUrl;
             }
 
             $asset->save();
@@ -104,9 +97,10 @@ class AssetController extends Controller
             $asset->fill($request->except('image'));
 
             if ($request->hasFile('image')) {
-                Storage::disk('public')->delete($asset->image);
-                $imagePath = $request->file('image')->store('images', 'public');
-                $asset->image = $imagePath;
+                Cloudinary::destroy($asset->image);
+                $uploadedFile = $request->file('image');                
+                $uploadResult = Cloudinary::upload($uploadedFile->getRealPath());
+                $asset->image = $uploadResult->getSecurePath();
             }
 
             $asset->save();
@@ -127,7 +121,8 @@ class AssetController extends Controller
 
     public function destroy(Asset $asset)
     {
-        try {
+        try {            
+            Cloudinary::destroy($asset->image);            
             $asset->delete();
 
             return response()->json([

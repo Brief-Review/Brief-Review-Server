@@ -11,8 +11,11 @@ class GraduatingController extends Controller
 
     public function index()
     {
-        $graduatings = Graduating::all();
-        return response()->json($graduatings);
+        $graduatings = Graduating::paginate(10); 
+        return response()->json([
+            'status' => true,
+            'data' => $graduatings
+        ], 200);
     }
 
 
