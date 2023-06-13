@@ -4,10 +4,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AssetController;
-use App\Http\Controllers\BriefingassetController;
 use App\Http\Controllers\BriefingController;
-use App\Http\Controllers\GraduatingController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\GraduatingController;
+use App\Http\Controllers\BriefingassetController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 Route::post('/auth/register', [UserController::class, 'register']);
@@ -22,6 +23,18 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/auth/logout', [UserController::class, 'logout']);
     Route::put('/users/{user}', [UserController::class, 'update']);
 
+    // Email Verification Routes
+    Route::get('/email/verify', function () {
+        // Return your email verification notice view
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+    
+        return response()->json(['message' => 'Email verified successfully.']);
+    })->middleware(['signed'])->name('verification.verify');
+
+    
     Route::middleware(['superadmin'])->group(function () {
         Route::get('/graduatings', [GraduatingController::class, 'index']);
         Route::post('/graduatings', [GraduatingController::class, 'store']);
