@@ -23,16 +23,16 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/auth/logout', [UserController::class, 'logout']);
     Route::put('/users/{user}', [UserController::class, 'update']);
 
-    // Email Verification Routes
-    Route::get('/email/verify', function () {
-        // Return your email verification notice view
-    })->name('verification.notice');
+    // // Email Verification Routes
+    // Route::get('/email/verify', function () {
+    //     // Return your email verification notice view
+    // })->name('verification.notice');
 
-    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-        $request->fulfill();
+    // Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    //     $request->fulfill();
     
-        return response()->json(['message' => 'Email verified successfully.']);
-    })->middleware(['signed'])->name('verification.verify');
+    //     return response()->json(['message' => 'Email verified successfully.']);
+    // })->middleware(['signed'])->name('verification.verify');
 
     
     Route::middleware(['superadmin'])->group(function () {
