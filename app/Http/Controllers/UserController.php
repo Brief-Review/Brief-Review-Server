@@ -35,7 +35,8 @@ class UserController extends Controller
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        event(new Registered($user));
+        //Send EmailVErification after register a new User
+        // event(new Registered($user));
 
         $accessToken = $user->createToken('API Token')->accessToken;
 
