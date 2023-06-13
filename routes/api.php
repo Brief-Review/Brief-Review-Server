@@ -47,7 +47,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
     });
 
-    Route::middleware('admin')->group(function () {
+    // Route::middleware('admin')->group(function () {
 
         Route::get('/assets', [AssetController::class, 'index']);
         Route::post('/assets', [AssetController::class, 'store']);
@@ -56,7 +56,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/assets/{asset}', [AssetController::class, 'destroy']);
         Route::get('/assets-all', [AssetController::class, 'all']);
         Route::get('/assets-by-user', [AssetController::class, 'assetsByUser']);
-    });
+    // });
 
     Route::middleware('mentor')->group(function () {
 

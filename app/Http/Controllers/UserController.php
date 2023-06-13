@@ -21,6 +21,15 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function user()
+    {
+        $user = Auth::user();
+        return response()->json([
+            'status' => true,
+            'data' => $user
+        ], 200);
+    }
+
     public function register(Request $request)
     {
         $validatedData = $request->validate([
