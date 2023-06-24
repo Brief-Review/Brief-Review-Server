@@ -23,8 +23,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => 'factoriaf5', // password
             'remember_token' => Str::random(1),
-            'graduating_id' =>'1'
-
+            
         ];
     }
 
